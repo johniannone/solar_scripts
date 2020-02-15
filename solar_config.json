@@ -1,0 +1,7 @@
+{
+    "site_id":"your site ID",
+    "api_key":"your API key",
+    "unit":"DAY",
+    "start":"-7",
+    "end":"-1"
+}
