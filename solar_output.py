@@ -14,15 +14,15 @@ import json
 from datetime import date, timedelta
 
 
-cfg = {}
-
 def load_config(file_name):
-    global cfg
+    cfg = {}
     with open(file_name) as config:
         cfg = json.load(config)
 
     cfg['address'] = \
         f"https://monitoringapi.solaredge.com/site/{cfg['site_id']}/energy"
+
+    return cfg
 
 
 def daysback(d):
@@ -62,18 +62,15 @@ def handle_request(r):
         return 'Response status: ' + r.status_code
 
 
-load_config('solar_config.json')
+def build_request():
+    cfg = load_config('solar_config.json')
+    params={
+        "api_key"  : cfg['api_key'],
+        "startDate": daysback(int(cfg['start'])),
+        "endDate"  : daysback(int(cfg['end'])),
+        "timeUnit" : cfg['unit']
+    }
+    return requests.get(cfg['address'], params)
 
-print(
-    handle_request(
-        requests.get(
-            cfg['address'],
-                params={
-                    "api_key"  : cfg['api_key'],
-                    "startDate": daysback(int(cfg['start'])),
-                    "endDate"  : daysback(int(cfg['end'])),
-                    "timeUnit" : cfg['unit']
-                }
-            )
-        )
-    )
+
+print(handle_request(build_request()))
