@@ -15,6 +15,7 @@ from datetime import date, timedelta
 
 
 def load_config(file_name):
+    """ read the .json config file and return a dictionary of values """
     cfg = {}
     with open(file_name) as config:
         cfg = json.load(config)
@@ -26,28 +27,30 @@ def load_config(file_name):
 
 
 def daysback(d):
-    """ get today minus a timedelta of days, returned as iso """
+    """ get today minus a timedelta of days, returned as iso format date """
     return (date.today() + timedelta(days=d)).strftime("%Y-%m-%d")
 
 
 def print_v(v):
-    """ convert to int then string to drop the decimal values """
+    """ make Watt hour values ready for printing """
     if v is not None:
+        # convert to int to drop the decimal values
         return str(int(v))
     else:
         return "No data"
 
 
 def print_d(d):
-    """ take the first 10 digits to drop the time values """
+    """ make date values ready for printing """
     if d is not None:
+        # take only the first 10 digits to retain the date portion
         return (d[:10])
     else:
         return "No data"
 
 
 def output_table(dict):
-    """ use key/value pairs in dictionary to print a table """
+    """ print the key/value pairs of the dictionary passed in """
     s = '\n   Date    |   Wh\n'
     s += ('-----------|------\n')
     for d in dict:
@@ -56,6 +59,7 @@ def output_table(dict):
 
 
 def handle_request(r):
+    """ call output_table for a successful request, else return the code """
     if r.status_code == 200:
         return output_table(r.json()['energy']['values'])
     else:
@@ -63,6 +67,7 @@ def handle_request(r):
 
 
 def build_request():
+    """ use the config dictionary to form and return the API request """
     cfg = load_config('solar_config.json')
     params={
         "api_key"  : cfg['api_key'],
