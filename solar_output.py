@@ -65,7 +65,7 @@ def handle_request(r):
     if r.status_code == 200:
         return output_table(r.json()['energy']['values'])
     else:
-        return 'Response status: ' + r.status_code
+        return 'Response status: ' + str(r.status_code)
 
 
 def build_request():
