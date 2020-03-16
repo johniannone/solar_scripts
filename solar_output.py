@@ -11,13 +11,15 @@ https://www.solaredge.com/sites/default/files/se_monitoring_api.pdf
 
 import requests
 import json
+import os
+import sys
 from datetime import date, timedelta
 
 
 def load_config(file_name):
     """ read the .json config file and return a dictionary of values """
     cfg = {}
-    with open(file_name) as config:
+    with open(os.path.join(sys.path[0], file_name)) as config:
         cfg = json.load(config)
 
     cfg['address'] = \
